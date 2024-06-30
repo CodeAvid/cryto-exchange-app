@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "237759880526",
+    "project_id": "crypto-exchange-app-5bbcd",
+    "storage_bucket": "crypto-exchange-app-5bbcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237759880526:android:9c1c3ca0b1114fbb8d921f",
+        "android_client_info": {
+          "package_name": "com.crypto.exchange.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1Va6lE6ZiCtENQ9DQMmuTrUY_VA8gGSA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

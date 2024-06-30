@@ -1,0 +1,55 @@
+name: build and deploy android apk
+run-name: Build and deploy android apk
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check for linting errors
+        uses: super-linter/super-linter@v6.6.0
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up key.properties
+        run: |
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" > android/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "${{ secrets.STORE_FILE_CONTENT }}" | base64 --decode > android/upload-keystore.jks
+
+      - name: Set up local.properties
+        run: |
+          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+
+      - name: Build APK
+        run: flutter build apk --release
+
+## deploy android app using fastlane
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Play Store Secret
+        run: |
+          echo "${{ secrets.PLAY_STORE_SECRET }}" | base64 --decode > android/play_store_secret.json
+
+      - name: Setup Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          rubygems: latest
+
+      - name: Build and Deploy
+        run: |
+          make build-android-app
